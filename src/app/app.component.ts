@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { environment } from '../environments/environment';
+import { initializeApp } from 'firebase/app';
+
+
+
+import { AuthService } from './login/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +12,17 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+  ) {
+    this.initFirebase();
+  }
+
+
+  async initFirebase() {
+    initializeApp(environment.firebase);
+    await this.authService.init();
+  }
+
+
 }

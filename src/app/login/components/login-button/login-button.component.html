@@ -1,0 +1,11 @@
+<ng-container *ngIf="profile; else elseTemplate">
+  <ion-avatar>
+    <img [src]="profile.photoURL" onerror="this.src='assets/person-circle-outline.svg'" />
+  </ion-avatar>
+</ng-container>
+<ng-template #elseTemplate>
+  <ion-button (click)="launchLoginGoogle()" expand="block" fill="clear" shape="round">
+    <ion-icon *ngIf="!loading" slot="icon-only" src="assets/logos/Google__G__Logo.svg"></ion-icon>
+    <ion-spinner *ngIf="loading" name="circles"></ion-spinner>
+  </ion-button>
+</ng-template>
