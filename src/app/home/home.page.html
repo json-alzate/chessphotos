@@ -16,6 +16,16 @@
     </ion-toolbar>
   </ion-header>
 
+  <div class="container">
+
+    <figure *ngFor="let photo of photos">
+      <img [src]="photo.url" />
+    </figure>
+
+  </div>
+
+
+
 
   <ion-fab *ngIf="profile" vertical="bottom" horizontal="end" slot="fixed" class="ion-margin">
     <ion-fab-button>

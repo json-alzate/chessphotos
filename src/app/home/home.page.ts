@@ -17,6 +17,7 @@ import { PhotosService } from '../services/photos.service';
 export class HomePage {
 
   profile!: FirebaseUser;
+  photos: any[] = [];
 
   constructor(
     private authService: AuthService,
@@ -36,7 +37,9 @@ export class HomePage {
     });
 
     this.photosService.getPhotosPaginated().subscribe((photos) => {
-      console.log('photos ', photos);
+      this.photos = photos;
+      console.log('photos', photos);
+
     });
 
   }

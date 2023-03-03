@@ -83,12 +83,18 @@ export class PhotosService {
     const uidPhoto = new Date().getTime().toString();
 
     return new Promise((resolve, reject) => {
-      this.uploadPhotoToStorage(uidPhoto, imageBase64).then(async (urlPhoto) => {
+      this.uploadPhotoToStorage(uidPhoto, imageBase64).then((urlPhoto) => {
         const photo = {
           uid: uidPhoto,
           url: urlPhoto
         };
-        await setDoc(doc(this.db, 'chessPhotos-photos', photo.uid), photo);
+        setDoc(doc(this.db, 'chessPhotos-photos', photo.uid), photo).then(() => {
+          console.log('Document successfully written!');
+        }).catch((error) => {
+          console.error('Error writing document: ', error);
+        });
+        this.photos = [photo, ...this.photos];
+        this.photosSubject.next(this.photos);
         resolve(urlPhoto);
 
       }).catch(error => reject(error));
@@ -123,32 +129,35 @@ export class PhotosService {
 
 
 
-  loadMore() {
-    let q = query(collection(this.db, 'chessPhotos-photos'),
+  async loadMore() {
+    let q = query(
+      collection(this.db, 'chessPhotos-photos'),
       orderBy('uid', 'desc'),
-      limit(10)
+      limit(20)
     );
 
     if (this.lastPhoto) {
-      q = query(collection(this.db, 'chessPhotos-photos'),
+      q = query(
+        collection(this.db, 'chessPhotos-photos'),
         orderBy('uid', 'desc'),
         startAfter(this.lastPhoto),
-        limit(10)
+        limit(20)
       );
     }
 
-    onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
-      const newPhotos: DocumentData[] = [];
-      querySnapshot.forEach((doc) => {
-        newPhotos.push(doc.data());
-      });
+    const querySnapshot = await getDocs(q);
+    const newPhotos: DocumentData[] = [];
 
-      this.photos = [...this.photos, ...newPhotos];
-      this.photosSubject.next(this.photos);
-
-      this.lastPhoto = querySnapshot.docs[querySnapshot.docs.length - 1];
+    querySnapshot.forEach((document) => {
+      newPhotos.push(document.data());
     });
+
+    this.photos = [...this.photos, ...newPhotos];
+
+    this.photosSubject.next(this.photos);
+
   }
+
 
 
   // obtiene las fotos de firestore paginadas de 10 en 10
