@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginButtonComponent implements OnInit {
 
-  profile!: any;
+  profile!: FirebaseUser;
   loading = false;
 
   constructor(
@@ -25,9 +25,6 @@ export class LoginButtonComponent implements OnInit {
       if (dataAuth) {
 
         this.profile = dataAuth;
-
-        console.log(this.profile);
-
 
       } else {
         // No tiene auth
