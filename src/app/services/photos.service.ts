@@ -159,32 +159,16 @@ export class PhotosService {
   }
 
 
+  // retorna una promesa que se cumple cuando se refresquen las fotos
+  refreshPhotos(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.photos = [];
+      this.lastPhoto = null;
+      this.photosSubject.next([]);
+      this.loadMore().then(() => resolve());
+    });
 
-  // obtiene las fotos de firestore paginadas de 10 en 10
-  // async getPhotosPaginated(lastPhoto: DocumentData | null = null): Promise<DocumentData[]> {
-  //   const photos: DocumentData[] = [];
-
-  //   let q = query(collection(this.db, 'chessPhotos/photos'),
-  //     orderBy('uid', 'desc'),
-  //     limit(10)
-  //   );
-
-  //   if (lastPhoto) {
-  //     q = query(collection(this.db, 'chessPhotos/photos'),
-  //       orderBy('uid', 'desc'),
-  //       startAfter(lastPhoto['data']().uid),
-  //       limit(10)
-  //     );
-  //   }
-
-  //   const querySnapshot = await getDocs(q);
-  //   querySnapshot.forEach((doc) => {
-  //     photos.push(doc.data());
-  //   });
-
-  //   return photos;
-  // }
-
+  }
 
 
 }

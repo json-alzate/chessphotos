@@ -55,8 +55,12 @@ export class HomePage {
 
     this.photosService.savePhoto(image.base64String!);
 
+  }
 
-
+  handleRefresh(event: any) {
+    this.photosService.refreshPhotos().then(() => {
+      event.target.complete();
+    });
   }
 
 
